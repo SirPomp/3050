@@ -5,7 +5,6 @@
 #include "chassis.hpp"
 #include "flywheel.hpp"
 #include "screen.hpp"
-#include "file.hpp"
 #include "misc.hpp"
 
 /**
@@ -20,7 +19,6 @@ void initialize() {
     // GEARSET_18 -- GREEN (default)
     // GEARSET_6 -- BLUE
 
-    generateDatastructures();
     drawScreen();
     initializeVision();
 
@@ -56,7 +54,6 @@ void competition_initialize() {
 
 bool screenInit;
 extern int selection;
-extern bool recAuton;
 /**
  * Runs the user autonomous code. This function will be started in its own task
  * with the default priority and stack size whenever the robot is enabled via
@@ -73,10 +70,8 @@ void autonomous() {
     // we made on the LCD
 
     if (!screenInit) {
-        recAuton = DEFAULT_RECAUTON;
         selection = DEFAULT_SELECTION;
     }
-    if (recAuton) recordableAuton();
     else {
         switch (selection) {
         case 0:

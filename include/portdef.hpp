@@ -35,7 +35,6 @@
 #define LATERAL_BASE_ENCODER_BOTTOM 4
 
 // Define Default Autonomous Behavior
-#define DEFAULT_RECAUTON false
 #define DEFAULT_SELECTION 0
 
 #define VEXNET_MANUAL true        // turns opcontrol into allowing for

@@ -14,27 +14,18 @@ lv_style_t * createBtnStyle(lv_style_t * copy, lv_color_t rel, lv_color_t pr,
 
 void btnSetToggled(lv_obj_t * btn, bool toggled);
 
-void resetDatastructures();
-
 static lv_res_t btnOnclickAction(lv_obj_t * btn);
+
+void drawAuton();
 
 void drawScreen();
 
 void drawMenu();
 
-void drawAuton();
-
 void drawDiag();
 void updateDiag(char * buffer);
 
-void drawRecordable();
-void finishRecording();
-
 void drawVision();
 void drawVisionLoop(void * param);
-
-// void drawTow();
-// void updateTow(lv_point_t leftPoints[], lv_point_t rightPoints[]);
-// void towCastChanges(int * leftInputs, int * rightInputs);
 
 #endif

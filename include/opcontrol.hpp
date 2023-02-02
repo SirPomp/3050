@@ -22,13 +22,7 @@ using namespace std;
 #define SCALING 1.0           // Constant that all chassis speeds are multiplied by, 
                               // used to scale all chassis movement. 
 
-void processInput(int * arrInputs);
-
-void startRecordThread();
-
-void recordLoop(void * param);
-
-void readController(int * instInputs);
+void control();
 
 // Helper for calculating averages
 int average(int x, int y);
