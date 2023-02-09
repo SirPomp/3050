@@ -51,7 +51,7 @@ void flywheelPIDTask(void * param) {
             d = 0.0;
         }
         else {
-            p = 0.5;
+            p = 0.75;
             i = 0.0000069;
             d = 0.0;
         }

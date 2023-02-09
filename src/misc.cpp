@@ -5,8 +5,8 @@
 #include <errno.h>
 extern int errno;
 
-pros::Motor intakeMotor1(INTAKE_1, pros::E_MOTOR_GEAR_RED, false, pros::E_MOTOR_ENCODER_DEGREES);
-pros::Motor intakeMotor2(INTAKE_2, pros::E_MOTOR_GEAR_RED, false, pros::E_MOTOR_ENCODER_DEGREES);
+pros::Motor indexerMotor(INDEXER, pros::E_MOTOR_GEAR_RED, false, pros::E_MOTOR_ENCODER_DEGREES);
+pros::Motor intakeMotor(INTAKE, pros::E_MOTOR_GEAR_RED, false, pros::E_MOTOR_ENCODER_DEGREES);
 
 // Digital out for pneumatics 
 pros::ADIDigitalOut pneumaticsIndexer(PNEUMATIC_INDEXER);
@@ -38,39 +38,6 @@ void toggleIndexer(int input) {
     pneumaticsIndexer.set_value(liftToggle);
 }
 
-const int PNEUMATIC_DELAY = 200;
-std::uint32_t timeLastExtend = 0;
-std::uint32_t timeLastCall = 0;
-std::uint32_t timeHeld = 0;
-void setIndexer(int input) {
-    if (input) {
-        if (timeLastCall == 0) timeLastCall = pros::millis();
-        std::uint32_t deltaTime = pros::millis() - timeLastCall;
-        timeHeld += deltaTime;
-        if ((timeHeld / PNEUMATIC_DELAY) % 2 == 0) {
-            pneumaticsIndexer.set_value(0);
-            timeLastExtend = pros::millis();
-        }
-        else {
-            pneumaticsIndexer.set_value(1);
-        }
-        timeLastCall = pros::millis();
-    }
-    else {
-        if (timeLastExtend == 0) {
-            pneumaticsIndexer.set_value(1);
-            return;
-        }
-        std::uint32_t sinceLastExtend = pros::millis() - timeLastExtend;
-        timeHeld = 0;
-        timeLastCall = 0;
-        if (sinceLastExtend > PNEUMATIC_DELAY) {
-            pneumaticsIndexer.set_value(1);
-            timeLastExtend = 0;
-        }
-    }
-}
-
 void setEndgame(int input) {
     pneumaticsEndgame.set_value(!input);
 }
@@ -79,13 +46,23 @@ bool intakeSpinning = false;
 void spinIntake(int speed) {
     if (speed && !intakeSpinning) {
         intakeSpinning = true;
-        intakeMotor1.move_velocity(speed);
-        intakeMotor2.move_velocity(-speed);
+        intakeMotor.move_velocity(-speed);
     }
     else if (!speed && intakeSpinning) {
         intakeSpinning = false;
-        intakeMotor1.move_velocity(0);
-        intakeMotor2.move_velocity(0);
+        intakeMotor.move_velocity(0);
+    }
+}
+
+bool indexerSpinning = false;
+void spinIndexer(int speed) {
+    if (speed && !indexerSpinning) {
+        indexerSpinning = true;
+        indexerMotor.move_velocity(speed);
+    }
+    else if (!speed && indexerSpinning) {
+        indexerSpinning = false;
+        indexerMotor.move_velocity(0);
     }
 }
 

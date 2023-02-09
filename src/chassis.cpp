@@ -17,7 +17,7 @@ pros::Motor backLeftDriveMotor(BACK_LEFT_DRIVE_MOTOR, pros::E_MOTOR_GEAR_GREEN, 
 pros::Gps gpsSensor(GPS_PORT, -0.0102, 0.1875);
 // pros::Gps gpsSensor(GPS_PORT);
 
-pros::Imu inertialSensor(INERTIAL_PORT);
+pros::Imu inertialSensor(GYRO_PORT);
 pros::ADIEncoder lateralEncoder(LATERAL_BASE_ENCODER_TOP, LATERAL_BASE_ENCODER_BOTTOM, false);
 
 extern pros::Vision visionSensor;
@@ -38,24 +38,6 @@ void chassisMoveIndividuals(int FRight, int FLeft, int BRight, int BLeft) {
     frontLeftDriveMotor.move(FLeft);
     backRightDriveMotor.move(BRight);
     backLeftDriveMotor.move(BLeft);
-}
-
-void trackSpeed(double * coords) {
-    coords[0] = ((frontRightDriveMotor.get_actual_velocity() + backRightDriveMotor.get_actual_velocity()) / 2.0);
-    coords[1] = ((frontLeftDriveMotor.get_actual_velocity() + backLeftDriveMotor.get_actual_velocity()) / 2.0);
-    coords[2] = lateralEncoder.get_value();
-}
- 
-void chassisGyroPark() {
-    //std::cout << "gyro things: ";
-    //std::cout << inertialSensor.get_pitch() << " --  " << inertialSensor.get_yaw() << " --  " << inertialSensor.get_roll() << " --  " << std::endl;
-
-    double pitch = inertialSensor.get_pitch();
-
-    if (pitch < -10) chassisMove(-50);
-    else if (pitch > 10) chassisMove(50);
-
-    //std::cout << accel.x << " - " << accel.y << " - " << accel.z << std::endl;
 }
 
 void chassisStopDrive(pros::motor_brake_mode_e_t brakeType, bool left, bool right) {
@@ -307,7 +289,6 @@ void seek(int xCord, int yCord, int time) {
         pros::delay(20);
     }
 }
-
 
 // functions below this line suffer from sensor error too much to be viable at this time
 

@@ -77,32 +77,40 @@ void control() {
 		chassisMoveIndividuals(leftY - leftX, leftY + leftX, leftY - leftX, leftY + leftX);
 	}
 	
-	if (master.get_digital(DIGITAL_A)) setFlywheelSpeed(500);
-	if (master.get_digital(DIGITAL_B)) setFlywheelSpeed(450);
-	if (master.get_digital(DIGITAL_X)) setFlywheelSpeed(400);
-	if (master.get_digital(DIGITAL_Y)) setFlywheelSpeed(325);
+	if (partner.get_digital(DIGITAL_R1)) setFlywheelSpeed(500);
+	if (partner.get_digital(DIGITAL_R2)) setFlywheelSpeed(450);
+	if (partner.get_digital(DIGITAL_L1)) setFlywheelSpeed(400);
+	if (partner.get_digital(DIGITAL_L2)) setFlywheelSpeed(360);
 
 	// spinFlywheel(arrInputs[27] || arrInputs[26] || arrInputs[25] || arrInputs[24]);
 
-	spinFlywheel(master.get_digital(DIGITAL_A) || master.get_digital(DIGITAL_B) || master.get_digital(DIGITAL_X) || master.get_digital(DIGITAL_Y));
+	spinFlywheel(partner.get_digital(DIGITAL_R1) || partner.get_digital(DIGITAL_R2) || partner.get_digital(DIGITAL_L1) || partner.get_digital(DIGITAL_L2));
 
-	if (master.get_digital(DIGITAL_L1)) {
+	if (master.get_digital(DIGITAL_R2)) {
 		spinIntake(127);
 	}
-	else if (master.get_digital(DIGITAL_L2)) {
-		spinIntake(-127);
+	else if (master.get_digital(DIGITAL_R1)) {
+		spinIntake(-64);
+	}
+	else {
+		spinIntake(0);
 	}
 
-	pollGps();
-
-	if (master.get_digital(DIGITAL_LEFT)) {
-		seek(0, 0, 1000);
+	if (master.get_digital(DIGITAL_L1)) {
+		spinIndexer(-64);
+	}
+	else {
+		spinIndexer(0);
 	}
 
-	// pollGyro();
+	toggleIndexer(master.get_digital(DIGITAL_L2));
+
+	// pollGps();
+	pollGyro();
 
 	if (master.get_digital(DIGITAL_RIGHT)) setEndgame(0);
-	setIndexer(master.get_digital(DIGITAL_R1));
+	if (master.get_digital(DIGITAL_LEFT)) setEndgame(1);
+	if (master.get_digital(DIGITAL_R2)) spinIndexer(1);
 
 	// accumulateGyroOffset();
 }

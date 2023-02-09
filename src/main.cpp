@@ -23,7 +23,6 @@ void initialize() {
     initializeVision();
 
     setEndgame(1);
-    setIndexer(1);
 
     pros::Task flywheelPID(flywheelPIDTask);
 
@@ -92,9 +91,9 @@ void autonomous() {
         case 5:
             autoBlue3();
             break;
-        case 6: 
-            skillRun();
-            break;
+        // case 6: 
+        //     skillRun();
+        //     break;
         default:
             break;
         }
