@@ -39,7 +39,7 @@ void toggleIndexer(int input) {
 }
 
 void setEndgame(int input) {
-    pneumaticsEndgame.set_value(!input);
+    pneumaticsEndgame.set_value(input);
 }
 
 bool intakeSpinning = false;
