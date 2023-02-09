@@ -225,8 +225,8 @@ void seek(int xCord, int yCord, int time) {
 
     double dist_Error;
     double dist_PidSpeed, dist_Derivitive, dist_TotalError, dist_PreviousError = 0.0;
-    float dist_P = 0.5;
-    float dist_I = 0.0;
+    float dist_P = 0.05;
+    float dist_I = 0.003333333;
     float dist_D = 0.0;
 
     std::vector<float> dampenerH;
@@ -250,8 +250,37 @@ void seek(int xCord, int yCord, int time) {
         float dampedHeading = std::accumulate(dampenerH.begin(), dampenerH.end(), 0.0) / dampenerH.size();
         
         float radiansToTarget = atan(dampedDeltaY / dampedDeltaX);
-        float degreesToTarget = (radiansToTarget / 3.141592) * 180.0;
-        float headingToTarget = 90.0 - degreesToTarget;
+        float degreesToTarget = fabs((radiansToTarget / 3.141592) * 180.0);
+        float headingToTarget;
+        
+        if (true) { // align gps frontside to target
+            if (dampedDeltaX <= 0 && dampedDeltaY <= 0) {
+                headingToTarget = -(90 + degreesToTarget);
+            }
+            else if (dampedDeltaX >= 0 && dampedDeltaY >= 0) {
+                headingToTarget = (90 - degreesToTarget);
+            }
+            else if (dampedDeltaX >= 0 && dampedDeltaY <= 0) {
+                headingToTarget = (90 + degreesToTarget);
+            }
+            else if (dampedDeltaX <= 0 && dampedDeltaY >= 0) {
+                headingToTarget = -(90 - degreesToTarget);
+            }
+        }
+        else if (false) { // align gps backside to target
+            if (dampedDeltaX >= 0 && dampedDeltaY >= 0) {
+                headingToTarget = -(90 + degreesToTarget);
+            }
+            else if (dampedDeltaX <= 0 && dampedDeltaY <= 0) {
+                headingToTarget = (90 - degreesToTarget);
+            }
+            else if (dampedDeltaX <= 0 && dampedDeltaY >= 0) {
+                headingToTarget = (90 + degreesToTarget);
+            }
+            else if (dampedDeltaX >= 0 && dampedDeltaY <= 0) {
+                headingToTarget = -(90 - degreesToTarget);
+            }
+        }
 
         turn_Error = headingToTarget - dampedHeading;
         turn_TotalError += turn_Error * 0.02;
@@ -280,6 +309,8 @@ void seek(int xCord, int yCord, int time) {
         pros::screen::print(TEXT_MEDIUM, 7, "heading: %3f, dist_Error: %3f", dampedHeading, dist_Error);
 
     //     std::cout << turn_PidSpeed << " " << dist_PidSpeed << std::endl;
+
+        dist_PidSpeed = 0;
 
         frontRightDriveMotor.move(turn_PidSpeed + dist_PidSpeed);
         frontLeftDriveMotor.move(-turn_PidSpeed + dist_PidSpeed);
